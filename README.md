@@ -20,6 +20,47 @@
 
 ## <a name="parte1">Mostrando um produto e a tipografia</a>
 
+#### proj01/application/views/produtos/index.php
+
+```php
+ <h1>Produtos</h1>
+        <table class="table">
+            <?php foreach ($produtos as $produto) : ?>
+                <tr>
+                    <td><?= anchor("produtos/mostra?id={$produto['id']}", $produto["nome"])?></td>
+                    <td><?= numeroEmReais($produto["preco"]); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+        <hr>
+```
+
+#### proj01/application/controllers/Produtos.php
+
+```php
+    public function mostra(){
+        $id = $this->input->get("id");
+        $this->load->model("produtos_model");
+        $produto = $this->produtos_model->busca($id);
+        $dados = array("produto" => $produto);
+        $this->load->helper("typography");
+        $this->load->view("produtos/mostra",$dados);
+    }
+```
+
+#### proj01/application/models/produtos_model.php
+
+```php
+   public function busca($id){
+        return $this->db->get_where("produtos", array(
+            "id" => $id
+        ))->row_array();
+    }
+
+```
+
+
+
 [Voltar ao Índice](#indice)
 
 ---
