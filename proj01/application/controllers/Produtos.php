@@ -38,8 +38,8 @@ class Produtos extends CI_Controller
         redirect('/');
 
     }
-    public function mostra(){
-        $id = $this->input->get("id");
+    public function mostra($id){
+        //$id = $this->input->get("id"); // mudança para recebimento via parametro ao inves de GET
         $this->load->model("produtos_model");
         $produto = $this->produtos_model->busca($id);
         $dados = array("produto" => $produto);

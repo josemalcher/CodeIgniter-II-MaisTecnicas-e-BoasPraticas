@@ -67,6 +67,50 @@
 
 ## <a name="parte2">Limitando conteúdo html e evitando injection de script</a>
 
+#### proj01/application/config/routes.php
+
+```php
+$route['produtos/(:num)'] = "produtos/mostra/$1";
+```
+
+#### proj01/application/controllers/Produtos.php
+```php
+ public function mostra($id){
+        //$id = $this->input->get("id"); // mudança para recebimento via parametro ao inves de GET
+        $this->load->model("produtos_model");
+        $produto = $this->produtos_model->busca($id);
+        $dados = array("produto" => $produto);
+        $this->load->helper("typography");
+        $this->load->view("produtos/mostra",$dados);
+    }
+```
+
+####  proj01/application/views/produtos/index.php
+```php
+  <h1>Produtos</h1>
+        <table class="table">
+            <?php foreach ($produtos as $produto) : ?>
+                <tr>
+                    <td><?= anchor("produtos/{$produto['id']}", $produto["nome"])?></td>
+                    <td><?= character_limiter($produto["descricao"],10) ?></td>
+                    <td><?= numeroEmReais($produto["preco"]); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+        <hr>
+```
+
+#### proj01/application/views/produtos/mostra.php
+```php
+<div class="container">
+    NOME: <?= $produto["nome"]; ?> <br>
+    PREÇO: <?= $produto["preco"]; ?> <br>
+    DESCRIÇÃO: <?= auto_typography(html_escape($produto["descricao"])); ?> <br>
+</div>
+```
+
+
+
 [Voltar ao Índice](#indice)
 
 ---

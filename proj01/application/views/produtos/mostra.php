@@ -16,7 +16,7 @@
 <div class="container">
     NOME: <?= $produto["nome"]; ?> <br>
     PREÇO: <?= $produto["preco"]; ?> <br>
-    DESCRIÇÃO: <?= auto_typography($produto["descricao"]); ?> <br>
+    DESCRIÇÃO: <?= auto_typography(html_escape($produto["descricao"])); ?> <br>
 </div>
 
 <script src="<?= base_url('assets/js/jquery-3.3.1.min.js') ?>"></script>
