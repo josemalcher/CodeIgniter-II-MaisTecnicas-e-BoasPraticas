@@ -14,6 +14,7 @@
 <body>
     <div class="container">
             <h1>Cadastro de Itens</h1>
+            <?= validation_errors("<p class='alert alert-danger'>", "</p>") ?>
             <?php
 
             echo form_open("produtos/novo");
@@ -22,8 +23,9 @@
                 "name" => "nome",
                 "id" => "nome",
                 "class" => "form-control",
+                "value" => set_value("nome",""),
                 "maxlength" => "255"
-            ));
+            )); echo form_error("nome");
 
             echo form_label("Preço", "preco");
             echo form_input(array(
@@ -31,14 +33,16 @@
                 "id" => "preco",
                 "class" => "form-control",
                 "maxlength" => "255",
+                "value" => set_value("preco",""),
                 "type" => "number"
-            ));
+            ));echo form_error("preco");
 
             echo form_textarea(array(
                 "name" => "descricao",
                 "id" => "descricao",
+                "value" => set_value("descricao", ""),
                 "class" => "form-control"
-            ));
+            )); echo form_error("descricao");
             echo form_button(array(
                 "class" => "btn btn-primary",
                 "content" => "Cadastrar",

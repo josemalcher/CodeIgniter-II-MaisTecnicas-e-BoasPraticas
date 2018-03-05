@@ -23,28 +23,42 @@ class Produtos extends CI_Controller
         $this->load->view("produtos/formulario");
     }
 
-    public function novo(){
+    public function novo()
+    {
+        $this->load->library("form_validation");
+        $this->form_validation->set_rules("nome","nome","required|min_length[5]");
+        $this->form_validation->set_rules("preco","preco","trim|required|min_length[10]");
+        $this->form_validation->set_rules("descricao","descricao","trim | required|min_length[10]");
 
-        $usuarioLogado = $this->session->userdata("usuario_logado"); 
-        $produto = array(
-            "nome"      => $this->input->post("nome"),
-            "preco"     => $this->input->post("preco"),
-            "descricao" => $this->input->post("descricao"),
-            "usuario_id"=> $usuarioLogado["id"]
-        );
-        $this->load->model("produtos_model");
-        $this->produtos_model->salva($produto);
-        $this->session->set_flashdata("success","Produto Salvo com sucesso");
-        redirect('/');
+        $this->form_validation->set_error_delimiters("<p class='alert alert-danger'>", "</p>");
 
+        $sucesso = $this->form_validation->run();
+
+        if ($sucesso) {
+            $usuarioLogado = $this->session->userdata("usuario_logado");
+            $produto = array(
+                "nome" => $this->input->post("nome"),
+                "preco" => $this->input->post("preco"),
+                "descricao" => $this->input->post("descricao"),
+                "usuario_id" => $usuarioLogado["id"]
+            );
+            $this->load->model("produtos_model");
+            $this->produtos_model->salva($produto);
+            $this->session->set_flashdata("success", "Produto Salvo com sucesso");
+            redirect('/');
+        } else {
+            $this->load->view("produtos/formulario");
+        }
     }
-    public function mostra($id){
+
+    public function mostra($id)
+    {
         //$id = $this->input->get("id"); // mudança para recebimento via parametro ao inves de GET
         $this->load->model("produtos_model");
         $produto = $this->produtos_model->busca($id);
         $dados = array("produto" => $produto);
         $this->load->helper("typography");
-        $this->load->view("produtos/mostra",$dados);
+        $this->load->view("produtos/mostra", $dados);
     }
 
 }
