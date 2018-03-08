@@ -198,17 +198,252 @@ public function novo()
 
 ## <a name="parte4">Validação customizada e mensagens em português</a>
 
+04 - alidação customizada e mensagens em português
+
+#### proj01/application/controllers/Produtos.php
+```php
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+
+class Produtos extends CI_Controller
+{
+
+    public function index()
+    {
+
+        //$this->output->enable_profiler(true);
+
+        $this->load->helper(array('url', 'currency', 'form'));
+
+        $this->load->model('produtos_model');
+        $produtos = $this->produtos_model->buscaTodos();
+        $dados = array("produtos" => $produtos);
+
+        $this->load->view("produtos/index.php", $dados);
+    }
+
+    public function formulario()
+    {
+        $this->load->view("produtos/formulario");
+    }
+
+    public function novo()
+    {
+        $this->form_validation->set_rules("nome", "nome", "required|min_length[5]|callback_nao_tenha_a_palavra_melhor");
+        $this->form_validation->set_rules("preco", "preco", "trim|required|min_length[2]");
+        $this->form_validation->set_rules("descricao", "descricao", "trim|required|min_length[10]");
+
+        $this->form_validation->set_error_delimiters("<p class='alert alert-danger'>", "</p>");
+
+        $sucesso = $this->form_validation->run();
+
+        if ($sucesso) {
+            $usuarioLogado = $this->session->userdata("usuario_logado");
+            $produto = array(
+                "nome" => $this->input->post("nome"),
+                "preco" => $this->input->post("preco"),
+                "descricao" => $this->input->post("descricao"),
+                "usuario_id" => $usuarioLogado["id"]
+            );
+            $this->load->model("produtos_model");
+            $this->produtos_model->salva($produto);
+            $this->session->set_flashdata("success", "Produto Salvo com sucesso");
+            redirect('/');
+        } else {
+            $this->load->view("produtos/formulario");
+        }
+    }
+
+    public function mostra($id)
+    {
+        //$id = $this->input->get("id"); // mudança para recebimento via parametro ao inves de GET
+        $this->load->model("produtos_model");
+        $produto = $this->produtos_model->busca($id);
+        $dados = array("produto" => $produto);
+        $this->load->helper("typography");
+        $this->load->view("produtos/mostra", $dados);
+    }
+
+    public function nao_tenha_a_palavra_melhor($nomeProduto)
+    {
+        $posicao = strpos($nomeProduto, "melhor");
+        if ($posicao == FALSE) {
+            return TRUE;
+        } else {
+            $this->form_validation->set_message("nao_tenha_a_palavra_melhor", "O campo '%s' não pode conter a palavra melhor");
+            return FALSE;
+        }
+    }
+
+}
+```
+
+#### proj01/application/views/produtos/formulario.php
+```php
+<!DOCTYPE html>
+<html lang="pt_BR">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Curso CI">
+    <meta name="author" content="José Malcher Jr.">
+    <link href="<?= base_url('assets/css/bootstrap.min.css') ?>" rel="stylesheet">
+    <title>Site Institucional - Cadastro de itens</title>
+</head>
+<body>
+<div class="container">
+    <h1>Cadastro de Itens</h1>
+    <?php
+
+    echo form_open("produtos/novo");
+    echo form_label("Nome:", "nome");
+    echo form_input(array(
+        "name" => "nome",
+        "id" => "nome",
+        "class" => "form-control",
+        "value" => set_value("nome", ""),
+        "maxlength" => "255"
+    ));
+    echo form_error("nome");
+
+    echo form_label("Preço", "preco");
+    echo form_input(array(
+        "name" => "preco",
+        "id" => "preco",
+        "class" => "form-control",
+        "maxlength" => "255",
+        "value" => set_value("preco", ""),
+        "type" => "number"
+    ));
+    echo form_error("preco");
+
+    echo form_textarea(array(
+        "name" => "descricao",
+        "id" => "descricao",
+        "value" => set_value("descricao", ""),
+        "class" => "form-control"
+    ));
+    echo form_error("descricao");
+    echo form_button(array(
+        "class" => "btn btn-primary",
+        "content" => "Cadastrar",
+        "type" => "submit"
+    ));
+    echo form_close();
+
+    ?>
+</div>
+<script src="<?= base_url('assets/js/jquery-3.3.1.min.js') ?>"></script>
+<script src="<?= base_url('assets/js/bootstrap.min.js') ?>"></script>
+<script src="<?= base_url('assets/js/ie10-viewport-bug-workaround.js') ?>"></script>
+</body>
+</html>
+</body>
+</html>
+```
+
 [Voltar ao Índice](#indice)
 
 ---
 
 ## <a name="parte5">Migrações e evolução do banco de dados</a>
 
+
+
 [Voltar ao Índice](#indice)
 
 ---
 
 ## <a name="parte6">Vendendo produtos e formatação de datas no mysql</a>
+
+#### proj01/application/helpers/date_helper.php
+
+```php
+<?php
+function dataPtBrParaMySql($dataPtBr)
+{
+    $partes = explode("/", "$dataPtBr");
+    return "{$partes[2]}-{$partes[1]}-{$partes[0]}";
+}
+```
+
+#### proj01/application/models/Vendas_model.php
+```php
+<?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+
+
+class Vendas_model extends CI_Model
+{
+    public function salva($venda)
+    {
+        $this->db->insert("vendas", $venda);
+    }
+}
+
+```
+
+#### proj01/application/controllers/Vendas.php
+```php
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+
+class Vendas extends CI_Controller
+{
+    public function nova()
+    {
+        $this->load->helper('date');
+        $usuario = $this->session->userdata("usuario_logado");
+
+        $this->load->model("vendas_model");
+
+        $venda = array(
+            "produto_id" => $this->input->post("produto_id"),
+            "comprador_id"=> $usuario["id"],
+            "data_de_entrega" => dataPtBrParaMySql($this->input->post("data_de_entrega"))
+        );
+        $this->vendas_model->salva($venda);
+        $this->session->set_flashdata("success","Pedido de comprar efetuado com sucesso");
+        redirect(base_url());
+    }
+}
+```
+
+####  proj01/application/views/produtos/mostra.php
+```php
+
+<div class="container">
+    NOME: <?= $produto["nome"]; ?> <br>
+    PREÇO: <?= $produto["preco"]; ?> <br>
+    DESCRIÇÃO: <?= auto_typography(html_escape($produto["descricao"])); ?> <br>
+
+    <h2>Compre Agora Mesmo!</h2>
+    <?php
+    echo form_open("vendas/nova");
+
+    echo form_hidden("produto_id", $produto["id"]);
+
+    echo form_label("Data de entrega", "data_de_entrega");
+    echo form_input(array(
+        "name" => "data_de_entrega",
+        "class" => "form-control",
+        "id" => "data_de_entrega",
+        "maxlength" => "255",
+        "value" => ""
+    ));
+    echo form_button(array(
+        "class" => "btn btn-primary",
+        "content" => "comprar",
+        "type" => "submit"
+    ));
+
+    echo form_close();
+
+    ?>
+
+</div>
+
+```
 
 [Voltar ao Índice](#indice)
 
