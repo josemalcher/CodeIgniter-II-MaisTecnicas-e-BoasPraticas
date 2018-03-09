@@ -348,6 +348,67 @@ class Produtos extends CI_Controller
 
 ## <a name="parte5">Migrações e evolução do banco de dados</a>
 
+- proj01/application/config/migration.php
+```php
+$config['migration_enabled'] = TRUE;
+$config['migration_type'] = 'sequential';
+$config['migration_version'] = 1;
+```
+
+- proj01/application/migrations/001_cria_tabela_de_vendas.php
+```php
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Migration_Cria_tabela_de_vendas extends CI_Migration
+{
+
+    public function up()
+    {
+        $this->dbforge->add_field(array(
+            'id' => array(
+                'type' => 'INT',
+                'auto_increment' => true
+            ),
+            'produto_id' => array(
+                'type' => 'INT'
+            ),
+            'comprador' => array(
+                'type' => 'INT'
+            ),
+            'data_de_entrega' => array(
+                'type' => 'DATE'
+            ),
+        ));
+        $this->dbforge->add_key('id', true);
+        $this->dbforge->create_table('vendas');
+    }
+
+    public function down()
+    { //voltar "atrás"
+        $this->dbforge->drop_table('vendas');
+    }
+
+}
+
+```
+
+- proj01/application/controllers/utils.php
+```php
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+
+class Utils extends CI_Controller
+{
+    public function migrate(){
+        $this->load->library("migration");
+
+        if ($this->migration->current() === FALSE)
+        {
+            show_error($this->migration->error_string());
+        }
+    }
+}
+```
 
 
 [Voltar ao Índice](#indice)
