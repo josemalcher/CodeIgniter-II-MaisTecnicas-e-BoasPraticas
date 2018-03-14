@@ -12,7 +12,7 @@ class Vendas extends CI_Controller
 
         $venda = array(
             "produto_id" => $this->input->post("produto_id"),
-            "comprador_id"=> $usuario["id"],
+            "comprador"=> $usuario["id"],
             "data_de_entrega" => dataPtBrParaMySql($this->input->post("data_de_entrega"))
         );
         $this->vendas_model->salva($venda);
