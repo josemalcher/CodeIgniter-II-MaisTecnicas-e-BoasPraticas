@@ -20,7 +20,7 @@
 
 ## <a name="parte1">Mostrando um produto e a tipografia</a>
 
-#### proj01/application/views/produtos/index.php
+-  proj01/application/views/produtos/index.php
 
 ```php
  <h1>Produtos</h1>
@@ -35,7 +35,7 @@
         <hr>
 ```
 
-#### proj01/application/controllers/Produtos.php
+-  proj01/application/controllers/Produtos.php
 
 ```php
     public function mostra(){
@@ -48,7 +48,7 @@
     }
 ```
 
-#### proj01/application/models/produtos_model.php
+-  proj01/application/models/produtos_model.php
 
 ```php
    public function busca($id){
@@ -67,13 +67,13 @@
 
 ## <a name="parte2">Limitando conteúdo html e evitando injection de script</a>
 
-#### proj01/application/config/routes.php
+-  proj01/application/config/routes.php
 
 ```php
 $route['produtos/(:num)'] = "produtos/mostra/$1";
 ```
 
-#### proj01/application/controllers/Produtos.php
+-  proj01/application/controllers/Produtos.php
 ```php
  public function mostra($id){
         //$id = $this->input->get("id"); // mudança para recebimento via parametro ao inves de GET
@@ -85,7 +85,7 @@ $route['produtos/(:num)'] = "produtos/mostra/$1";
     }
 ```
 
-####  proj01/application/views/produtos/index.php
+-   proj01/application/views/produtos/index.php
 ```php
   <h1>Produtos</h1>
         <table class="table">
@@ -100,7 +100,7 @@ $route['produtos/(:num)'] = "produtos/mostra/$1";
         <hr>
 ```
 
-#### proj01/application/views/produtos/mostra.php
+-  proj01/application/views/produtos/mostra.php
 ```php
 <div class="container">
     NOME: <?= $produto["nome"]; ?> <br>
@@ -117,7 +117,7 @@ $route['produtos/(:num)'] = "produtos/mostra/$1";
 
 ## <a name="parte3">Validação</a>
 
-#### proj01/application/controllers/Produtos.php
+-  proj01/application/controllers/Produtos.php
 ```php
 public function novo()
     {
@@ -148,7 +148,7 @@ public function novo()
     }
 ```
 
-#### proj01/application/views/produtos/formulario.php
+-  proj01/application/views/produtos/formulario.php
 ```php
  <div class="container">
             <h1>Cadastro de Itens</h1>
@@ -200,7 +200,7 @@ public function novo()
 
 04 - alidação customizada e mensagens em português
 
-#### proj01/application/controllers/Produtos.php
+-  proj01/application/controllers/Produtos.php
 ```php
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
@@ -278,7 +278,7 @@ class Produtos extends CI_Controller
 }
 ```
 
-#### proj01/application/views/produtos/formulario.php
+-  proj01/application/views/produtos/formulario.php
 ```php
 <!DOCTYPE html>
 <html lang="pt_BR">
@@ -417,7 +417,7 @@ class Utils extends CI_Controller
 
 ## <a name="parte6">Vendendo produtos e formatação de datas no mysql</a>
 
-#### proj01/application/helpers/date_helper.php
+-  proj01/application/helpers/date_helper.php
 
 ```php
 <?php
@@ -428,7 +428,7 @@ function dataPtBrParaMySql($dataPtBr)
 }
 ```
 
-#### proj01/application/models/Vendas_model.php
+-  proj01/application/models/Vendas_model.php
 ```php
 <?php
 if (!defined('BASEPATH')) exit('No direct script access allowed');
@@ -444,7 +444,7 @@ class Vendas_model extends CI_Model
 
 ```
 
-#### proj01/application/controllers/Vendas.php
+-  proj01/application/controllers/Vendas.php
 ```php
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
@@ -470,7 +470,7 @@ class Vendas extends CI_Controller
 }
 ```
 
-####  proj01/application/views/produtos/mostra.php
+-   proj01/application/views/produtos/mostra.php
 ```php
 
 <div class="container">
