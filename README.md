@@ -559,6 +559,17 @@ class Vendas_model extends CI_Model
 
 ```
 
+#### LISTAR APENAS OS NÃO VENDIDOS
+
+- proj01/application/models/produtos_model.php
+```php
+  public function buscaTodos()
+    {
+        $this->db->where("vendido",false);
+        return $this->db->get("produtos")->result_array();
+    }
+```
+
 [Voltar ao Índice](#indice)
 
 ---
