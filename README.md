@@ -512,11 +512,60 @@ class Vendas extends CI_Controller
 
 ## <a name="parte7">Marcando os produtos como vendidos: condicionais e mais migrations</a>
 
+
+- proj01/application/migrations/002_adiciona_vendido_ao_produto.php
+```php
+<?php
+
+class Migration_adiciona_vendido_ao_produto extends CI_Migration
+{
+    public function up()
+    {
+        $this->dbforge->add_column('produtos', array(
+            'vendido'=>array(
+                'type'=>'boolean',
+                'default'=> 0
+            )
+        ));
+    }
+
+    public function down()
+    {
+        $this->dbforge->drop_column('produtos','vendido');
+    }
+}
+```
+
+- proj01/application/config/migration.php
+
+```php
+$config['migration_version'] = 2;
+```
+
+- proj01/application/models/Vendas_model.php
+
+```php
+class Vendas_model extends CI_Model
+{
+    public function salva($venda)
+    {
+        $this->db->insert("vendas", $venda);
+        $this->db->update("produtos",
+            array("vendido" => 1),
+            array("id"=> $venda["produto_id"])
+        );
+    }
+}
+
+```
+
 [Voltar ao Índice](#indice)
 
 ---
 
 ## <a name="parte8">Join de tabelas e minhas vendas</a>
+
+
 
 [Voltar ao Índice](#indice)
 
