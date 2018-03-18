@@ -576,7 +576,64 @@ class Vendas_model extends CI_Model
 
 ## <a name="parte8">Join de tabelas e minhas vendas</a>
 
+Listagem das vendas do usuário
 
+- proj01/application/controllers/Vendas.php
+ 
+```php
+
+    public function index()
+    {
+        $usuario = $this->session->userdata("usuario_logado");
+        $this->load->model("produtos_model");
+        $produtosVendidos = $this->produtos_model->buscaVendidos($usuario);
+        $dados = array("produtosVendidos" => $produtosVendidos);
+        $this->load->view("vendas/index", $dados);
+    }
+```
+ 
+- proj01/application/models/produtos_model.php
+
+```php
+    public function buscaVendidos($usuario)
+    {
+        $id = $usuario["id"];
+        $this->db->select("produtos.*, vendas.data_de_entrega");
+        $this->db->from("produtos");
+        $this->db->join("vendas", "vendas.produto_id = produtos.id");
+        $this->db->where("vendido",true);
+        $this->db->where("usuario_id",$id);
+        return $this->db->get()->result_array();
+
+    }
+```
+
+- proj01/application/helpers/date_helper.php
+```php
+// função para ajustar a data no view para o formato BR
+function dataMysqlParaPtBr($dataMysql){
+    $data = new DateTime($dataMysql);
+    return $data->format("d/m/Y");
+}
+```
+
+- proj01/application/views/vendas/index.php
+
+```php
+<div class="container">
+    <h1>Minhas Vendas</h1>
+    <table class="table">
+        <?php foreach ($produtosVendidos as $produto) : ?>
+            <tr>
+                <td><?= $produto["nome"]; ?></td>
+                <td><?= dataMysqlParaPtBr($produto["data_de_entrega"]);  ?></td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+
+    <hr>
+</div>
+```
 
 [Voltar ao Índice](#indice)
 
