@@ -641,6 +641,30 @@ function dataMysqlParaPtBr($dataMysql){
 
 ## <a name="parte9">Protegendo rotas com autorização</a>
 
+- proj01/application/helpers/auth_helper.php
+
+```php
+<?php
+function autoriza()
+{
+    $ci = get_instance();
+    $usuarioLogado = $ci->session->userdata("usuario_logado");
+    if (!$usuarioLogado) {
+        $ci->session->set_flashdata("danger", "Você precisa estar logado!");
+        redirect("/");
+    }
+    return $usuarioLogado;
+}
+```
+
+- proj01/application/controllers/Vendas.php
+- proj01/application/controllers/Produtos.php
+
+```php
+  //$usuario = $this->session->userdata("usuario_logado");
+    $usuario = autoriza(); // << - Ajuste para o helper de verificação
+```
+
 [Voltar ao Índice](#indice)
 
 ---

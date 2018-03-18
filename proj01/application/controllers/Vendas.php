@@ -6,7 +6,8 @@ class Vendas extends CI_Controller
     public function nova()
     {
         $this->load->helper('date');
-        $usuario = $this->session->userdata("usuario_logado");
+        //$usuario = $this->session->userdata("usuario_logado");
+        $usuario = autoriza(); // << - Ajuste para o helper de verificação
 
         $this->load->model("vendas_model");
 
@@ -22,7 +23,8 @@ class Vendas extends CI_Controller
 
     public function index()
     {
-        $usuario = $this->session->userdata("usuario_logado");
+        //$usuario = $this->session->userdata("usuario_logado");
+        $usuario = autoriza();
         $this->load->model("produtos_model");
         $produtosVendidos = $this->produtos_model->buscaVendidos($usuario);
         $dados = array("produtosVendidos" => $produtosVendidos);

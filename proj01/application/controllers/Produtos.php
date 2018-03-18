@@ -20,11 +20,13 @@ class Produtos extends CI_Controller
 
     public function formulario()
     {
+        autoriza();
         $this->load->view("produtos/formulario");
     }
 
     public function novo()
     {
+        $usuarioLogado = autoriza(); // <<-- helper de verificação se está logado!
         $this->form_validation->set_rules("nome", "nome", "required|min_length[5]|callback_nao_tenha_a_palavra_melhor");
         $this->form_validation->set_rules("preco", "preco", "trim|required|min_length[2]");
         $this->form_validation->set_rules("descricao", "descricao", "trim|required|min_length[10]");
@@ -34,7 +36,7 @@ class Produtos extends CI_Controller
         $sucesso = $this->form_validation->run();
 
         if ($sucesso) {
-            $usuarioLogado = $this->session->userdata("usuario_logado");
+            //$usuarioLogado = $this->session->userdata("usuario_logado");
             $produto = array(
                 "nome" => $this->input->post("nome"),
                 "preco" => $this->input->post("preco"),
