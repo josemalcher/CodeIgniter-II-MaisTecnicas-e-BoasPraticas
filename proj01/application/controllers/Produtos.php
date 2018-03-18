@@ -15,13 +15,13 @@ class Produtos extends CI_Controller
         $produtos = $this->produtos_model->buscaTodos();
         $dados = array("produtos" => $produtos);
 
-        $this->load->view("produtos/index.php", $dados);
+        $this->load->template("produtos/index.php", $dados);
     }
 
     public function formulario()
     {
         autoriza();
-        $this->load->view("produtos/formulario");
+        $this->load->template("produtos/formulario");
     }
 
     public function novo()
@@ -48,7 +48,7 @@ class Produtos extends CI_Controller
             $this->session->set_flashdata("success", "Produto Salvo com sucesso");
             redirect('/');
         } else {
-            $this->load->view("produtos/formulario");
+            $this->load->template("produtos/formulario");
         }
     }
 
@@ -59,7 +59,7 @@ class Produtos extends CI_Controller
         $produto = $this->produtos_model->busca($id);
         $dados = array("produto" => $produto);
         $this->load->helper("typography");
-        $this->load->view("produtos/mostra", $dados);
+        $this->load->template("produtos/mostra", $dados);
     }
 
     public function nao_tenha_a_palavra_melhor($nomeProduto)

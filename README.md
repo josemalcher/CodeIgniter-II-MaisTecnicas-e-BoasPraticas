@@ -734,6 +734,25 @@ public function nova()
 
 ## <a name="parte11">Cabeçalho e rodapé: customizando o Code Igniter</a>
 
+- proj01/application/core/MY_Loader.php
+
+```php
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+
+class MY_Loader extends CI_Loader
+{
+    public function template($nome, $dados = array())
+    {
+        $this->view("cabecalho.php");
+        $this->view($nome,$dados);
+        $this->view("rodape.php");
+    }
+}
+```
+
+- Ajustes das páginas chamar o template
+
 [Voltar ao Índice](#indice)
 
 ---

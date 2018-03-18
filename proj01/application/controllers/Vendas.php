@@ -56,6 +56,6 @@ class Vendas extends CI_Controller
         $produtosVendidos = $this->produtos_model->buscaVendidos($usuario);
         $dados = array("produtosVendidos" => $produtosVendidos);
 
-        $this->load->view("vendas/index", $dados);
+        $this->load->template("vendas/index", $dados);
     }
 }
