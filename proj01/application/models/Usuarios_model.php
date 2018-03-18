@@ -6,7 +6,7 @@ class Usuarios_model extends CI_Model
 
     public function salvar($usuario)
     {
-        $this->db->insert("usuario", $usuario);  
+        $this->db->insert("usuario", $usuario);
     }
 
     public function buscaPorEmailSenha($email, $senha)
@@ -15,6 +15,12 @@ class Usuarios_model extends CI_Model
         $this->db->where("senha", $senha);
         $usuario = $this->db->get("usuario")->row_array(); //somente a primeira linha
         return $usuario;
+    }
+
+    public function busca($id)
+    {
+        $this->db->where("id", $id);
+        return $this->db->get("usuarios")->row_array();
     }
 
 
